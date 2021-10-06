@@ -1,0 +1,184 @@
+{% extends "./base.html" %}
+{% load tshirt_tags %}
+{% load filter_tags %}
+
+{% load static %}  
+
+{% block content %}
+
+
+
+<div class="container-fluid">
+    <div class="row m-1">
+        <div class="col-2 border">
+            <!-- Filter div -->
+            <form id="filterform" action="/" method="GET">
+                <!-- {% csrf_token %} -->
+                <div>
+
+                    <!-- Brands -->
+                    <div class="form-group">
+                        <label for="brand">Brand</label>
+                        <select onchange="submitForm()" name="brand" class="form-control" id="brands">
+                            <option value="">Select Brands</option>
+                            {% for brand in brands%}
+                            <option 
+                      {% selected_attr request.GET.brand brand.slug%} value="{{brand.slug}}">
+                                {{brand.title}}</option>
+
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- sleeves -->
+                    <div class="form-group">
+                        <label for="sleeves">sleeves</label>
+                        <select onchange="submitForm()" name="sleeve" class="form-control" id="sleeves">
+                            <option value="">Select sleeves</option>
+                            {% for sleeve in sleeves%}
+                            <option 
+                            {% selected_attr request.GET.sleeve sleeve.slug %}
+                            value="{{sleeve.slug}}">{{sleeve.title}}</option>
+
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- idealfor -->
+                    <div class="form-group">
+                        <label for="idealfor">idealfor</label>
+                        <select onchange="submitForm()" name="idealfor" class="form-control" id="idealfor">
+                            <option value="">Select idealfor</option>
+                            {% for ideal in idealfor%}
+                            <option
+                            {% selected_attr request.GET.idealfor ideal.slug%}
+                            value="{{ideal.slug}}">{{ideal.title}}</option>
+
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+                    <!-- necktypes -->
+                    <div class="form-group">
+                        <label for="necktypes">necktypes</label>
+                        <select onchange="submitForm()" name="necktype" class="form-control" id="necktypes">
+                            <option value="">Select necktypes</option>
+                            {% for nt in necktypes%}
+                            <option 
+                            {% selected_attr request.GET.necktype nt.slug%}
+                            value="{{nt.slug}}">{{nt.title}}</option>
+
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- necktypes -->
+                    <div class="form-group">
+                        <label for="colors">colors</label>
+                        <select onchange="submitForm()" name="color" class="form-control" id="colors">
+                            <option value="">Select colors</option>
+                            {% for cl in colors%}
+                            <option 
+                            {% selected_attr request.GET.color cl.slug%}
+                            
+                            value="{{cl.slug}}">{{cl.title}}</option>
+
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <a href="/" class="btn btn-info btn-sm mt-3">Clear filter</a>
+                </div>
+
+            </form>
+        </div>
+        <div class="col">
+            <div class="row">
+
+
+
+                {% for tshirt in page_obj %}
+
+                <div class="col-3 ">
+                    <div class="card mt-3 ml-2">
+                        <img class="card-img-top" src="{{tshirt.image.url}}" alt="Card image cap">
+                        <div class="card-body shadow">
+                            <h5 class="card-title"> {{ tshirt.name |lower}}</h5>
+                            <!-- <p class="card-text">{{tshirt.description}}</p> -->
+
+
+                            <span> {% sale_price tshirt as sale %}
+                                {{sale | rupee}}
+                            </span>
+
+                            <!-- <span style="text-decoration-line: line-through;">₹ {{tshirt.min_price}}</span> -->
+                            <span class="text-danger"> <del>{% min_price tshirt as minprice %}
+                                    {{minprice|rupee}}
+                                </del> </span>
+
+
+                            <span>{{tshirt.discount}}% off</span>
+
+                            <div class="card-footer p-1 text-center mt-3">
+
+                                <a href="/product/{{tshirt.slug}}" class="btn  ">See More</a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <li>{{ tshirt.description }}</li> -->
+                <!-- <li>{{ tshirt.discount }}</li> -->
+
+
+                {% endfor %}
+<div>
+    
+    <nav aria-label="Page navigation" class="mt-2">
+        <ul class="pagination justify-content-end">
+          
+          
+          {% if page_obj.has_previous %}
+          <li class="page-item"><a class="page-link" href="?{{pageurl}}1">&laquo; first</a></li>
+          <li class="page-item">
+            <a class="page-link" href="?{{pageurl}}{{ page_obj.previous_page_number }}">previous</a>
+          </li>
+          {% endif %}
+
+          <li class="page-item">
+            <a class="page-link" href="">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</a>
+          </li>
+
+
+          {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?{{pageurl}}{{ page_obj.next_page_number }}">next</a>
+          </li>
+         <li class="page-item">
+          <a class="page-link" href="?{{pageurl}}{{ page_obj.paginator.num_pages }}">last &raquo;</a>
+         </li>
+          {% endif %}
+          
+        </ul>
+      </nav>
+
+
+</div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<script src="{% static 'store/js/home.js'%}"></script>
+
+
+<h3>This is Educational Project </h3>
+
+{% endblock content%}

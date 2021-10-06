@@ -1,0 +1,71 @@
+{% extends "./base.html" %}
+{% load tshirt_tags %}
+{% block content %}
+
+<!-- {{request.get_full_path}}   it gives full path -->
+
+<div class="container">
+    <div class="row mt-3">
+        <div class="col">
+
+            <div class="p-4 m-3">
+                <div class="w-75 text-center mx-auto">
+                    <img src="{{tshirt.image.url}}" class="img-fluid" alt="">
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+
+            <div class="display-4">{{tshirt.name}}</div>
+            <hr>
+            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reiciendis alias optio eligendi dolorum
+                sapiente molestias dolores quos omnis voluptatum, ipsam, voluptas excepturi assumenda hic consequuntur
+                nihil, nisi neque enim facere.</p>
+
+            <div class="row ">
+                <div class="col">
+                    <div class="p-3 display-8">
+                        <span class="text-danger"><del>{{price|rupee}}</del></span>
+                        &nbsp;
+                        <span>{{sell_price|rupee}}</span>
+                    </div>
+
+                </div>
+                <div class="col border">
+                    <label for="">Select Size</label>
+                    <div class="row">
+
+                        {% for size in tshirt.sizevarient_set.all%}
+                        <div class="col">
+                            <a href="/product/{{tshirt.slug}}?size={{size.size}}" class="btn border btn-block btn-{% get_active_size_button_class active_size size %}">
+
+                                {{size.size}}
+
+                            </a>
+                        </div>
+
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+                <div class="display-5">
+                    {{tshirt.discount }}% off
+                </div>
+                <div class="col border">
+                    <div class="p-2">
+                        <a href="/addtocart/{{tshirt.slug}}/{{active_size.size}}?return_url={{request.get_full_path}}" class="btn btn-outline-dark btn-block">Add to cart</a>
+
+                        <a href="" class="btn btn-outline-dark btn-block">Buy now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+{% endblock %}
